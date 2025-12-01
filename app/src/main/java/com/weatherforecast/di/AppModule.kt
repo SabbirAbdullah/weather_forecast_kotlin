@@ -14,7 +14,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
-
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
@@ -26,23 +25,38 @@ object AppModule {
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
         val logging = HttpLoggingInterceptor().apply {
-            // Use BODY in debug, NONE in release
-            level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BASIC else HttpLoggingInterceptor.Level.NONE
+            level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY
+            else HttpLoggingInterceptor.Level.NONE
         }
+
+        val apiKeyInterceptor = okhttp3.Interceptor { chain ->
+            val original = chain.request()
+            val newUrl = original.url.newBuilder()
+                .addQueryParameter("appid", BuildConfig.OPENWEATHER_API_KEY)
+                .addQueryParameter("units", "metric") // Celsius
+                .build()
+
+            val newRequest = original.newBuilder()
+                .url(newUrl)
+                .build()
+
+            chain.proceed(newRequest)
+        }
+
         return OkHttpClient.Builder()
+            .addInterceptor(apiKeyInterceptor)
             .addInterceptor(logging)
             .build()
     }
 
     @Provides
     @Singleton
-    fun provideRetrofit(baseUrl: String, ok: OkHttpClient): Retrofit {
-        return Retrofit.Builder()
+    fun provideRetrofit(baseUrl: String, okHttp: OkHttpClient): Retrofit =
+        Retrofit.Builder()
             .baseUrl(baseUrl)
-            .client(ok)
+            .client(okHttp)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-    }
 
     @Provides
     @Singleton

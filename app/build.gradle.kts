@@ -1,3 +1,4 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -6,52 +7,44 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
-android {
-    namespace = "com.weatherforecast"
-    compileSdk = 36
 
-    defaultConfig {
-        applicationId = "com.weatherforecast"
-        minSdk = 26
-        targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        android {
+            namespace = "com.weatherforecast"
+            compileSdk = 36
 
-        buildConfigField(
-            "String",
-            "OPENWEATHER_API_KEY",
-            "\"${project.properties["OPENWEATHER_API_KEY"] ?: "YOUR_API_KEY"}\""
-        )
-    }
+            defaultConfig {
+                applicationId = "com.weatherforecast"
+                minSdk = 26
+                targetSdk = 36
+                versionCode = 1
+                versionName = "1.0"
+                testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+                // 🔥 Load API key from local.properties safely
+                val apiKey: String = gradleLocalProperties(rootDir,providers)
+                    .getProperty("OPENWEATHER_API_KEY") ?: ""
+
+                buildConfigField(
+                    "String",
+                    "OPENWEATHER_API_KEY",
+                    "\"$apiKey\""
+                )
+            }
+
+            buildFeatures {
+                compose = true
+                buildConfig = true
+            }
+
+            compileOptions {
+                sourceCompatibility = JavaVersion.VERSION_17
+                targetCompatibility = JavaVersion.VERSION_17
+            }
+
+            kotlinOptions {
+                jvmTarget = "17"
+            }
         }
-    }
-
-    buildFeatures {
-        compose = true
-        buildConfig = true
-    }
-
-    // ⬇️ REQUIRED for Kotlin 2.x
-
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-}
 
 dependencies {
 
