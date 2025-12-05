@@ -10,6 +10,7 @@ activityCompose = "1.10.0"
 
 # Lifecycle + Architecture
 lifecycle = "2.8.5"
+material3Icons = "1.2.0"
 navigationCompose = "2.8.5"
 
 # Coroutines
@@ -44,6 +45,7 @@ material = "1.12.0"
 hilt = "2.53.1"
 ksp = "2.1.0-1.0.29"
 material3 = "1.4.0"
+roomKtx = "2.8.4"
 
 
 [libraries]
@@ -51,6 +53,7 @@ material3 = "1.4.0"
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 
 # Compose (using BOM)
+androidx-material3-icons = { module = "androidx.compose.material3:material3-icons", version.ref = "material3Icons" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 compose-ui = { group = "androidx.compose.ui", name = "ui" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
@@ -103,6 +106,7 @@ hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-com
 
 # Material3
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 
 
 [plugins]

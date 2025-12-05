@@ -55,6 +55,16 @@ dependencies {
     implementation("androidx.compose.material:material-icons-core")
     implementation("androidx.compose.material:material-icons-extended")
 
+    implementation("androidx.compose.material3:material3:1.4.0") // or latest stable version
+    implementation("androidx.room:room-ktx:2.8.4")
+
+
+// Compose UI and tooling
+    implementation("androidx.compose.ui:ui:1.10.0")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.10.0")
+    implementation(libs.androidx.room.ktx)
+    debugImplementation("androidx.compose.ui:ui-tooling:1.10.0")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
